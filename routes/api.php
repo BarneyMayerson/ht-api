@@ -1,10 +1,9 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', fn () => response()->json([
-    'message' => 'Hi, API.',
-], 200));
+Route::get('/login', [AuthController::class, 'login']);
 
 Route::get('/user', fn (Request $request) => $request->user())->middleware('auth:sanctum');
