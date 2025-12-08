@@ -4,14 +4,16 @@ declare(strict_types=1);
 
 namespace App\Traits;
 
+use Illuminate\Http\JsonResponse;
+
 trait ApiResponses
 {
-    protected function ok($message)
+    protected function ok(string $message): JsonResponse
     {
         return $this->success($message);
     }
 
-    protected function success($message, $statusCode = 200)
+    protected function success(string $message, int $statusCode = 200): JsonResponse
     {
         return response()->json(
             [
