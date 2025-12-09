@@ -12,7 +12,7 @@ trait ApiResponses
     /**
      * @param  array<string, mixed>  $data
      */
-    protected function responseOk(string $message, array $data): JsonResponse
+    protected function responseOk(string $message, array $data = []): JsonResponse
     {
         return $this->success($message, $data);
     }
@@ -20,7 +20,7 @@ trait ApiResponses
     /**
      * @param  array<string, mixed>  $data
      */
-    protected function success(string $message, array $data, int $statusCode = Response::HTTP_OK): JsonResponse
+    protected function success(string $message, array $data = [], int $statusCode = Response::HTTP_OK): JsonResponse
     {
         return response()->json(
             [

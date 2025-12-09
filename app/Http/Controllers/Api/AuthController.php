@@ -9,6 +9,7 @@ use App\Http\Requests\Api\LoginUserRequest;
 use App\Models\User;
 use App\Traits\ApiResponses;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 
@@ -29,7 +30,18 @@ class AuthController extends Controller
         $user = User::firstWhere('email', $request->email);
 
         return $this->responseOk('Authenticated', [
-            'token' => $user->createToken('API token for '.$user->name)->plainTextToken,
+            'token' => $user->createToken(
+                name: 'API token for '.$user->name,
+                abilities: ['*'],
+                expiresAt: now()->addMonth()
+            )->plainTextToken,
         ]);
+    }
+
+    public function logout(Request $request): JsonResponse
+    {
+        $request->user()->currentAccessToken()->delete();
+
+        return $this->responseOk('Done');
     }
 }
