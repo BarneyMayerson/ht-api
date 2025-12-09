@@ -7,9 +7,6 @@ namespace App\Http\Resources\v1;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-/**
- * @mixin \App\Models\Ticket
- */
 class TicketResource extends JsonResource
 {
     /**
@@ -20,21 +17,24 @@ class TicketResource extends JsonResource
     #[\Override]
     public function toArray(Request $request): array
     {
+        /** @var \App\Models\Ticket $ticket */
+        $ticket = $this->resource;
+
         return [
             'type' => 'ticket',
-            'id' => $this->id,
+            'id' => $ticket->id,
             'attributes' => [
-                'title' => $this->title,
-                'description' => $this->description,
-                'status' => $this->status,
-                'createdAt' => $this->created_at,
-                'updatedAt' => $this->updated_at,
+                'title' => $ticket->title,
+                'description' => $this->when($request->routeIs('v1.tickets.show'), $ticket->description),
+                'status' => $ticket->status,
+                'createdAt' => $ticket->created_at,
+                'updatedAt' => $ticket->updated_at,
             ],
             'relationships' => [
                 'author' => [
                     'data' => [
                         'type' => 'user',
-                        'id' => $this->user_id,
+                        'id' => $ticket->user_id,
                     ],
                     'links' => [
                         'self' => 'TODO',
@@ -42,7 +42,7 @@ class TicketResource extends JsonResource
                 ],
             ],
             'links' => [
-                'self' => route('v1.tickets.show', ['ticket' => $this->id]),
+                'self' => route('v1.tickets.show', ['ticket' => $ticket->id]),
             ],
         ];
     }
