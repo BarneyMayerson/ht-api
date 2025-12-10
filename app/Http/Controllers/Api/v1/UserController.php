@@ -4,12 +4,11 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api\v1;
 
-use App\Http\Controllers\Controller;
 use App\Http\Resources\v1\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
 
-class UserController extends Controller
+class UserController extends ApiController
 {
     /**
      * Display a listing of the resource.
@@ -18,6 +17,10 @@ class UserController extends Controller
      */
     public function index()
     {
+        if ($this->include('tickets')) {
+            return UserResource::collection(User::with('tickets')->paginate());
+        }
+
         return UserResource::collection(User::paginate());
     }
 
@@ -34,6 +37,10 @@ class UserController extends Controller
      */
     public function show(User $user): UserResource
     {
+        if ($this->include('tickets')) {
+            return UserResource::make($user->load('tickets'));
+        }
+
         return UserResource::make($user);
     }
 

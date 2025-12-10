@@ -32,6 +32,10 @@ class UserResource extends JsonResource
                     'emailUpdateddAt' => $user->updated_at,
                 ]),
             ],
+            'includes' => [TicketResource::collection($this->whenLoaded('tickets'))],
+            'links' => [
+                'self' => route('v1.users.show', $user),
+            ],
         ];
     }
 }

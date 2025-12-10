@@ -4,13 +4,12 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api\v1;
 
-use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\v1\StoreTicketRequest;
 use App\Http\Requests\Api\v1\UpdateTicketRequest;
 use App\Http\Resources\v1\TicketResource;
 use App\Models\Ticket;
 
-class TicketController extends Controller
+class TicketController extends ApiController
 {
     /**
      * Display a listing of the resource.
@@ -19,6 +18,10 @@ class TicketController extends Controller
      */
     public function index()
     {
+        if ($this->include('author')) {
+            return TicketResource::collection(Ticket::with('user')->paginate());
+        }
+
         return TicketResource::collection(Ticket::paginate());
     }
 
@@ -35,7 +38,11 @@ class TicketController extends Controller
      */
     public function show(Ticket $ticket): TicketResource
     {
-        return TicketResource::make($ticket->load('user'));
+        if ($this->include('author')) {
+            return new TicketResource($ticket->load('user'));
+        }
+
+        return TicketResource::make($ticket);
     }
 
     /**
