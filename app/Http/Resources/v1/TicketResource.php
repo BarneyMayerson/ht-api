@@ -44,7 +44,7 @@ class TicketResource extends JsonResource
 
                 ],
             ],
-            'includes' => UserResource::make($this->whenLoaded('user')),
+            'includes' => UserResource::make($this->whenLoaded('author')),
             'links' => [
                 'self' => route('v1.tickets.show', ['ticket' => $ticket->id]),
             ],
