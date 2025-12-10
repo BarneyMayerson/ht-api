@@ -35,7 +35,7 @@ class TicketController extends Controller
      */
     public function show(Ticket $ticket): TicketResource
     {
-        return TicketResource::make($ticket);
+        return TicketResource::make($ticket->load('user'));
     }
 
     /**
