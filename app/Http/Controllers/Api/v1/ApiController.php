@@ -10,6 +10,7 @@ class ApiController extends Controller
 {
     public function include(string $relationship): bool
     {
+        /** @var string|null $param */
         $param = request()->get('include');
 
         if (! isset($param)) {

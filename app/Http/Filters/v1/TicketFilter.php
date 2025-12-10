@@ -6,8 +6,16 @@ namespace App\Http\Filters\v1;
 
 use Illuminate\Database\Eloquent\Builder;
 
+/**
+ * @extends QueryFilter<\App\Models\Ticket>
+ */
 class TicketFilter extends QueryFilter
 {
+    /**
+     * Filter by status (you can pass one or more separated by commas).
+     *
+     * @return Builder<\App\Models\Ticket>
+     */
     public function status(string $values): Builder
     {
         return $this->builder->whereIn('status', explode(',', $values));
