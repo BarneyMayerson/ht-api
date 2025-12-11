@@ -32,29 +32,12 @@ abstract class QueryFilter
     {
         $this->builder = $builder;
 
-        foreach ($this->request->all() as $param => $value) {
+        foreach ($this->request->get('filter') as $param => $value) {
             if (method_exists($this, $param)) {
                 $this->$param($value);
             }
         }
 
         return $builder;
-    }
-
-    /**
-     * Helper method if you want to call filters manually.
-     *
-     * @param  array<string, mixed>  $filters
-     * @return Builder<TModel>
-     */
-    protected function filter(array $filters): Builder
-    {
-        foreach ($filters as $param => $value) {
-            if (method_exists($this, $param)) {
-                $this->$param($value);
-            }
-        }
-
-        return $this->builder;
     }
 }

@@ -18,6 +18,10 @@ class TicketController extends ApiController
      */
     public function index()
     {
+        if ($this->include('author')) {
+            return TicketResource::collection(Ticket::query()->with('author')->filter()->get());
+        }
+
         return TicketResource::collection(Ticket::query()->filter()->get());
     }
 
