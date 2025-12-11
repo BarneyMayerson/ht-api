@@ -32,7 +32,13 @@ abstract class QueryFilter
     {
         $this->builder = $builder;
 
-        foreach ($this->request->get('filter') as $param => $value) {
+        $filters = $this->request->get('filter', []);
+
+        if (! is_array($filters)) {
+            return $builder;
+        }
+
+        foreach ($filters as $param => $value) {
             if (method_exists($this, $param)) {
                 $this->$param($value);
             }
