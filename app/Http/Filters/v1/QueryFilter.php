@@ -39,6 +39,14 @@ abstract class QueryFilter
         }
 
         foreach ($filters as $param => $value) {
+            if (! is_string($param)) {
+                continue;
+            }
+
+            if ($value === null || $value === '') {
+                continue;
+            }
+
             if (method_exists($this, $param)) {
                 $this->$param($value);
             }
