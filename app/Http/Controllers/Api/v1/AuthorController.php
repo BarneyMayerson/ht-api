@@ -8,7 +8,7 @@ use App\Http\Resources\v1\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
 
-class UserController extends ApiController
+class AuthorController extends ApiController
 {
     /**
      * Display a listing of the resource.
@@ -35,13 +35,13 @@ class UserController extends ApiController
     /**
      * Display the specified resource.
      */
-    public function show(User $user): UserResource
+    public function show(User $author): UserResource
     {
         if ($this->include('tickets')) {
-            return UserResource::make($user->load('tickets'));
+            return UserResource::make($author->load('tickets'));
         }
 
-        return UserResource::make($user);
+        return UserResource::make($author);
     }
 
     /**
