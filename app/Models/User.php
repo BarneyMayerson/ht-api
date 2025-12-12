@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Http\Filters\v1\AuthorFilter;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -56,5 +58,16 @@ class User extends Authenticatable
     public function tickets(): HasMany
     {
         return $this->hasMany(Ticket::class);
+    }
+
+    /**
+     * Applies filters from the query.
+     *
+     * @param  Builder<\App\Models\User>  $query
+     * @return Builder<\App\Models\User>
+     */
+    public function scopeFilter(Builder $query): Builder
+    {
+        return new AuthorFilter(request())->apply($query);
     }
 }

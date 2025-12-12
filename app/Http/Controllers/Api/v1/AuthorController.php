@@ -18,10 +18,10 @@ class AuthorController extends ApiController
     public function index()
     {
         if ($this->include('tickets')) {
-            return UserResource::collection(User::with('tickets')->paginate());
+            return UserResource::collection(User::with('tickets')->filter()->get());
         }
 
-        return UserResource::collection(User::paginate());
+        return UserResource::collection(User::filter()->get());
     }
 
     /**

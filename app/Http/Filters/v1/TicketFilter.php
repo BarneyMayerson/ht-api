@@ -20,4 +20,16 @@ class TicketFilter extends QueryFilter
     {
         return $this->builder->whereIn('status', explode(',', $values));
     }
+
+    /**
+     * Filter by title.
+     *
+     * @return Builder<\App\Models\Ticket>
+     */
+    public function title(string $value)
+    {
+        $likeStr = str_replace('*', '%', $value);
+
+        return $this->builder->where('title', 'like', $likeStr);
+    }
 }
