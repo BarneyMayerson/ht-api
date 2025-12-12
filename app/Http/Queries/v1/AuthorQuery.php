@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Filters\v1;
+namespace App\Http\Queries\v1;
 
 use Illuminate\Database\Eloquent\Builder;
 
 /**
  * @extends QueryFilter<\App\Models\User>
  */
-class AuthorFilter extends QueryFilter
+class AuthorQuery extends Query
 {
     protected array $sortable = ['id', 'name', 'email', 'created_at', 'updated_at'];
 

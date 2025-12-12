@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
-use App\Http\Filters\v1\AuthorFilter;
+use App\Http\Queries\v1\AuthorQuery;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -66,8 +66,8 @@ class User extends Authenticatable
      * @param  Builder<\App\Models\User>  $query
      * @return Builder<\App\Models\User>
      */
-    public function scopeFilter(Builder $query): Builder
+    public function scopeWithRequest(Builder $query): Builder
     {
-        return new AuthorFilter(request())->apply($query);
+        return new AuthorQuery(request())->apply($query);
     }
 }

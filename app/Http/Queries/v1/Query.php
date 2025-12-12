@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Filters\v1;
+namespace App\Http\Queries\v1;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
@@ -13,7 +13,7 @@ use Illuminate\Support\Str;
  *
  * @template TModel of \Illuminate\Database\Eloquent\Model
  */
-abstract class QueryFilter
+abstract class Query
 {
     /** @var Builder<TModel> */
     protected Builder $builder;

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use App\Http\Filters\v1\TicketFilter;
+use App\Http\Queries\v1\TicketQuery;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -29,8 +29,8 @@ class Ticket extends Model
      * @param  Builder<\App\Models\Ticket>  $query
      * @return Builder<\App\Models\Ticket>
      */
-    public function scopeFilter(Builder $query): Builder
+    public function scopeWithRequest(Builder $query): Builder
     {
-        return new TicketFilter(request())->apply($query);
+        return new TicketQuery(request())->apply($query);
     }
 }
