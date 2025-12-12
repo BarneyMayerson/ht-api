@@ -11,6 +11,8 @@ use Illuminate\Database\Eloquent\Builder;
  */
 class AuthorFilter extends QueryFilter
 {
+    protected array $sortable = ['id', 'name', 'email', 'created_at', 'updated_at'];
+
     /**
      * Filter by id.
      *

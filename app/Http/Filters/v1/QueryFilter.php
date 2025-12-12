@@ -6,6 +6,7 @@ namespace App\Http\Filters\v1;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 /**
  * Base class for query filtering
@@ -16,6 +17,9 @@ abstract class QueryFilter
 {
     /** @var Builder<TModel> */
     protected Builder $builder;
+
+    /** @var string[] */
+    protected array $sortable = [];
 
     public function __construct(protected Request $request)
     {
@@ -49,6 +53,19 @@ abstract class QueryFilter
 
             if (method_exists($this, $param)) {
                 $this->$param($value);
+            }
+        }
+
+        $sortables = $this->request->filled('sort')
+            ? explode(',', $this->request->string('sort')->toString())
+            : [];
+
+        foreach ($sortables as $sortable) {
+            $direction = str($sortable)->startsWith('-') ? 'desc' : 'asc';
+            $column = Str::of($sortable)->remove('-')->snake()->value();
+
+            if (in_array($column, $this->sortable)) {
+                $this->builder->orderBy($column, $direction);
             }
         }
 

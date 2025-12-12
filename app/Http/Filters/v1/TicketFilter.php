@@ -11,6 +11,8 @@ use Illuminate\Database\Eloquent\Builder;
  */
 class TicketFilter extends QueryFilter
 {
+    protected array $sortable = ['title', 'status', 'created_at', 'updated_at'];
+
     /**
      * Filter by status (you can pass one or more separated by commas).
      *
