@@ -7,6 +7,7 @@ namespace App\Http\Controllers\Api\v1;
 use App\Http\Requests\Api\v1\StoreTicketRequest;
 use App\Http\Resources\v1\TicketResource;
 use App\Models\Ticket;
+use Illuminate\Http\JsonResponse;
 
 class AuthorTicketsController extends ApiController
 {
@@ -25,7 +26,7 @@ class AuthorTicketsController extends ApiController
     /**
      * Store a newly created resource in storage.
      */
-    public function store($author_id, StoreTicketRequest $request)
+    public function store(int $author_id, StoreTicketRequest $request): JsonResponse|TicketResource
     {
         $model = [
             'title' => $request->input('data.attributes.title'),

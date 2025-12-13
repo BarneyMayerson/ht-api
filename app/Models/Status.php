@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use Illuminate\Support\Arr;
-
 enum Status: string
 {
     case Active = 'A';
@@ -16,7 +14,7 @@ enum Status: string
     /** @return string[] */
     public static function allValues(): array
     {
-        return Arr::pluck(self::cases(), 'value');
+        return array_column(self::cases(), 'value');
     }
 
     public static function valuesToString(string $separator = ','): string
