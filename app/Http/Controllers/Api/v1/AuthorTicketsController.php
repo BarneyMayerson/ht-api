@@ -17,7 +17,7 @@ class AuthorTicketsController extends ApiController
     {
         return TicketResource::collection(
             Ticket::where('user_id', $author_id)
-                ->filter()
+                ->withRequest()
                 ->paginate()
         );
     }

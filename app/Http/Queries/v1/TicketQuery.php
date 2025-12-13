@@ -7,7 +7,7 @@ namespace App\Http\Queries\v1;
 use Illuminate\Database\Eloquent\Builder;
 
 /**
- * @extends QueryFilter<\App\Models\Ticket>
+ * @extends Query<\App\Models\Ticket>
  */
 class TicketQuery extends Query
 {

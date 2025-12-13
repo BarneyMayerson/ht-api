@@ -7,7 +7,7 @@ namespace App\Http\Queries\v1;
 use Illuminate\Database\Eloquent\Builder;
 
 /**
- * @extends QueryFilter<\App\Models\User>
+ * @extends Query<\App\Models\User>
  */
 class AuthorQuery extends Query
 {
