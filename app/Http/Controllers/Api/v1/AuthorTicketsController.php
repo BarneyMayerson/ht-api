@@ -7,7 +7,9 @@ namespace App\Http\Controllers\Api\v1;
 use App\Http\Requests\Api\v1\StoreTicketRequest;
 use App\Http\Resources\v1\TicketResource;
 use App\Models\Ticket;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
 
 class AuthorTicketsController extends ApiController
 {
@@ -36,5 +38,25 @@ class AuthorTicketsController extends ApiController
         ];
 
         return TicketResource::make(Ticket::create($model));
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(int $authorId, int $ticketId): JsonResponse
+    {
+        try {
+            $ticket = Ticket::findOrFail($ticketId);
+
+            if ($ticket->user_id == $authorId) {
+                $ticket->delete();
+
+                return $this->responseOk('Ticket has been deleted.');
+            }
+
+            return $this->error('Ticket not found', Response::HTTP_NOT_FOUND);
+        } catch (ModelNotFoundException) {
+            return $this->error('Ticket not found', Response::HTTP_NOT_FOUND);
+        }
     }
 }

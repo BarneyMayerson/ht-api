@@ -11,6 +11,7 @@ use App\Models\Ticket;
 use App\Models\User;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
 
 class TicketController extends ApiController
 {
@@ -54,13 +55,20 @@ class TicketController extends ApiController
     /**
      * Display the specified resource.
      */
-    public function show(Ticket $ticket): TicketResource
+    public function show(int $ticketId): JsonResponse|TicketResource
     {
-        if ($this->include('author')) {
-            return new TicketResource($ticket->load('author'));
+        try {
+            $ticket = Ticket::findOrFail($ticketId);
+
+            if ($this->include('author')) {
+                return new TicketResource($ticket->load('author'));
+            }
+
+            return TicketResource::make($ticket);
+        } catch (ModelNotFoundException) {
+            return $this->error('Ticket not found', Response::HTTP_NOT_FOUND);
         }
 
-        return TicketResource::make($ticket);
     }
 
     /**
@@ -74,8 +82,15 @@ class TicketController extends ApiController
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Ticket $ticket): void
+    public function destroy(int $ticketId): JsonResponse
     {
-        //
+        try {
+            $ticket = Ticket::findOrFail($ticketId);
+            $ticket->delete();
+
+            return $this->responseOk('Ticket has been deleted.');
+        } catch (ModelNotFoundException) {
+            return $this->error('Ticket not found', Response::HTTP_NOT_FOUND);
+        }
     }
 }
