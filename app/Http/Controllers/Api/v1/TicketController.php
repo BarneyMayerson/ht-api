@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api\v1;
 
+use App\Http\Requests\Api\v1\ReplaceTicketRequest;
 use App\Http\Requests\Api\v1\StoreTicketRequest;
 use App\Http\Requests\Api\v1\UpdateTicketRequest;
 use App\Http\Resources\v1\TicketResource;
@@ -77,6 +78,21 @@ class TicketController extends ApiController
     public function update(UpdateTicketRequest $request, Ticket $ticket): void
     {
         //
+    }
+
+    /**
+     * Replace the specified resource in storage.
+     */
+    public function Replace(ReplaceTicketRequest $request, int $ticketId): JsonResponse|TicketResource
+    {
+        try {
+            $ticket = Ticket::findOrFail($ticketId);
+            $ticket->update($request->all()['data']['attributes']); // @phpstan-ignore-line
+
+            return TicketResource::make($ticket);
+        } catch (ModelNotFoundException) {
+            return $this->error('Ticket not found', Response::HTTP_NOT_FOUND);
+        }
     }
 
     /**
