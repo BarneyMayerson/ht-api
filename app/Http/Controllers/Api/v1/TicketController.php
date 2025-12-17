@@ -87,7 +87,7 @@ class TicketController extends ApiController
     {
         try {
             $ticket = Ticket::findOrFail($ticketId);
-            $ticket->update($request->all()['data']['attributes']); // @phpstan-ignore-line
+            $ticket->update($request->all()['data']['attributes']);
 
             return TicketResource::make($ticket);
         } catch (ModelNotFoundException) {

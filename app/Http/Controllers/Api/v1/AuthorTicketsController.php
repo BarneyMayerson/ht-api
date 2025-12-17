@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api\v1;
 
+use App\Http\Requests\Api\v1\ReplaceTicketRequest;
 use App\Http\Requests\Api\v1\StoreTicketRequest;
 use App\Http\Resources\v1\TicketResource;
 use App\Models\Ticket;
@@ -21,7 +22,7 @@ class AuthorTicketsController extends ApiController
         return TicketResource::collection(
             Ticket::where('user_id', $author_id)
                 ->withRequest()
-                ->paginate()
+                ->get()
         );
     }
 
@@ -38,6 +39,21 @@ class AuthorTicketsController extends ApiController
         ];
 
         return TicketResource::make(Ticket::create($model));
+    }
+
+    /**
+     * Replace the specified resource in storage.
+     */
+    public function replace(int $authorId, int $ticketId, ReplaceTicketRequest $request): JsonResponse|TicketResource
+    {
+        try {
+            $ticket = Ticket::query()->where('user_id', $authorId)->findOrFail($ticketId);
+            $ticket->update($request->all()['data']['attributes']);
+
+            return TicketResource::make($ticket);
+        } catch (ModelNotFoundException) {
+            return $this->error('Your ticket not found', Response::HTTP_NOT_FOUND);
+        }
     }
 
     /**

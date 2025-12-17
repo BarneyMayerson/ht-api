@@ -11,6 +11,7 @@ Route::middleware('auth:sanctum')->group(function (): void {
     Route::put('tickets/{ticket}', [TicketController::class, 'replace']);
 
     Route::apiResource('authors.tickets', AuthorTicketsController::class)->except(['update']);
+    Route::put('authors/{author}/tickets/{ticket}', [AuthorTicketsController::class, 'replace']);
 
     Route::apiResource('authors', AuthorController::class);
 
