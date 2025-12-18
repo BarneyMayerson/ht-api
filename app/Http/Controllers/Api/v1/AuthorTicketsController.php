@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Requests\Api\v1\ReplaceTicketRequest;
 use App\Http\Requests\Api\v1\StoreTicketRequest;
+use App\Http\Requests\Api\v1\UpdateTicketRequest;
 use App\Http\Resources\v1\TicketResource;
 use App\Models\Ticket;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -17,10 +18,10 @@ class AuthorTicketsController extends ApiController
     /**
      * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection<int, TicketResource>
      */
-    public function index(int $author_id)
+    public function index(int $authorId)
     {
         return TicketResource::collection(
-            Ticket::where('user_id', $author_id)
+            Ticket::where('user_id', $authorId)
                 ->withRequest()
                 ->get()
         );
@@ -29,16 +30,26 @@ class AuthorTicketsController extends ApiController
     /**
      * Store a newly created resource in storage.
      */
-    public function store(int $author_id, StoreTicketRequest $request): JsonResponse|TicketResource
+    public function store(int $authorId, StoreTicketRequest $request): TicketResource
     {
-        $model = [
-            'title' => $request->input('data.attributes.title'),
-            'description' => $request->input('data.attributes.description'),
-            'status' => $request->input('data.attributes.status'),
-            'user_id' => $author_id,
-        ];
+        return TicketResource::make(Ticket::create(
+            $request->mappedAttributes(['user_id' => $authorId])
+        ));
+    }
 
-        return TicketResource::make(Ticket::create($model));
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(int $authorId, int $ticketId, UpdateTicketRequest $request): JsonResponse|TicketResource
+    {
+        try {
+            $ticket = Ticket::query()->where('user_id', $authorId)->findOrFail($ticketId);
+            $ticket->update($request->mappedAttributes());
+
+            return TicketResource::make($ticket);
+        } catch (ModelNotFoundException) {
+            return $this->error('Your ticket not found', Response::HTTP_NOT_FOUND);
+        }
     }
 
     /**
@@ -48,7 +59,7 @@ class AuthorTicketsController extends ApiController
     {
         try {
             $ticket = Ticket::query()->where('user_id', $authorId)->findOrFail($ticketId);
-            $ticket->update($request->all()['data']['attributes']);
+            $ticket->update($request->mappedAttributes());
 
             return TicketResource::make($ticket);
         } catch (ModelNotFoundException) {
