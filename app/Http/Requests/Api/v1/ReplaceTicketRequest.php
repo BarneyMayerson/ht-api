@@ -5,9 +5,8 @@ declare(strict_types=1);
 namespace App\Http\Requests\Api\v1;
 
 use App\Models\Status;
-use Illuminate\Foundation\Http\FormRequest;
 
-class ReplaceTicketRequest extends FormRequest
+class ReplaceTicketRequest extends BaseTicketRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -28,16 +27,6 @@ class ReplaceTicketRequest extends FormRequest
             'data.attributes.title' => 'required|string',
             'data.attributes.description' => 'required|string',
             'data.attributes.status' => 'required|string|in:'.Status::valuesToString(),
-        ];
-    }
-
-    /**
-     * @return array<string, string>
-     */
-    public function messages(): array
-    {
-        return [
-            'data.attributes.status' => 'The data.attributes.status is invalid. Please use '.Status::valuesToString(),
         ];
     }
 }

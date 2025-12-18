@@ -5,9 +5,8 @@ declare(strict_types=1);
 namespace App\Http\Requests\Api\v1;
 
 use App\Models\Status;
-use Illuminate\Foundation\Http\FormRequest;
 
-class StoreTicketRequest extends FormRequest
+class StoreTicketRequest extends BaseTicketRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -35,15 +34,5 @@ class StoreTicketRequest extends FormRequest
         }
 
         return $rules;
-    }
-
-    /**
-     * @return array<string, string>
-     */
-    public function messages(): array
-    {
-        return [
-            'data.attributes.status' => 'The data.attributes.status is invalid. Please use '.Status::valuesToString(),
-        ];
     }
 }

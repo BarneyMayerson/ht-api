@@ -43,14 +43,7 @@ class TicketController extends ApiController
             ]);
         }
 
-        $model = [
-            'title' => $request->input('data.attributes.title'),
-            'description' => $request->input('data.attributes.description'),
-            'status' => $request->input('data.attributes.status'),
-            'user_id' => $request->input('data.relationships.author.data.id'),
-        ];
-
-        return TicketResource::make(Ticket::create($model));
+        return TicketResource::make(Ticket::create($request->mappedAttributes()));
     }
 
     /**
@@ -75,9 +68,16 @@ class TicketController extends ApiController
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateTicketRequest $request, Ticket $ticket): void
+    public function update(UpdateTicketRequest $request, int $ticketId): JsonResponse|TicketResource
     {
-        //
+        try {
+            $ticket = Ticket::findOrFail($ticketId);
+            $ticket->update($request->mappedAttributes());
+
+            return TicketResource::make($ticket);
+        } catch (ModelNotFoundException) {
+            return $this->error('Ticket not found', Response::HTTP_NOT_FOUND);
+        }
     }
 
     /**
@@ -87,7 +87,7 @@ class TicketController extends ApiController
     {
         try {
             $ticket = Ticket::findOrFail($ticketId);
-            $ticket->update($request->all()['data']['attributes']);
+            $ticket->update($request->mappedAttributes());
 
             return TicketResource::make($ticket);
         } catch (ModelNotFoundException) {

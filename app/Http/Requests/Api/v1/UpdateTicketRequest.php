@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\Api\v1;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Models\Status;
 
-class UpdateTicketRequest extends FormRequest
+class UpdateTicketRequest extends BaseTicketRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,9 @@ class UpdateTicketRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'data.attributes.title' => 'sometimes|string',
+            'data.attributes.description' => 'sometimes|string',
+            'data.attributes.status' => 'sometimes|string|in:'.Status::valuesToString(),
         ];
     }
 }
