@@ -21,5 +21,11 @@ class DatabaseSeeder extends Seeder
         $users = User::factory(6)->create();
 
         Ticket::factory(64)->recycle($users)->create();
+
+        User::factory()->manager()->create([
+            'name' => 'The Manager',
+            'email' => 'manager@hta.lan',
+        ]);
+
     }
 }

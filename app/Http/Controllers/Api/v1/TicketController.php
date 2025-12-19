@@ -41,13 +41,18 @@ class TicketController extends ApiController
     {
         try {
             User::findOrFail($request->input('data.relationships.author.data.id'));
+
+            $this->authorize('store', Ticket::class);
+
+            return TicketResource::make(Ticket::create($request->mappedAttributes()));
         } catch (ModelNotFoundException) {
             return $this->responseOk('User not found.', [
                 'error' => 'The provided user id does not exists.',
             ]);
+        } catch (AuthorizationException) {
+            return $this->error('You are not authorized to store that resource', Response::HTTP_UNAUTHORIZED);
         }
 
-        return TicketResource::make(Ticket::create($request->mappedAttributes()));
     }
 
     /**
@@ -66,7 +71,6 @@ class TicketController extends ApiController
         } catch (ModelNotFoundException) {
             return $this->error('Ticket not found', Response::HTTP_NOT_FOUND);
         }
-
     }
 
     /**
@@ -95,11 +99,15 @@ class TicketController extends ApiController
     {
         try {
             $ticket = Ticket::findOrFail($ticketId);
+
+            $this->authorize('replace', $ticket);
             $ticket->update($request->mappedAttributes());
 
             return TicketResource::make($ticket);
         } catch (ModelNotFoundException) {
             return $this->error('Ticket not found', Response::HTTP_NOT_FOUND);
+        } catch (AuthorizationException) {
+            return $this->error('You are not authorized to replace that resource', Response::HTTP_UNAUTHORIZED);
         }
     }
 
@@ -110,11 +118,15 @@ class TicketController extends ApiController
     {
         try {
             $ticket = Ticket::findOrFail($ticketId);
+
+            $this->authorize('delete', $ticket);
             $ticket->delete();
 
             return $this->responseOk('Ticket has been deleted.');
         } catch (ModelNotFoundException) {
             return $this->error('Ticket not found', Response::HTTP_NOT_FOUND);
+        } catch (AuthorizationException) {
+            return $this->error('You are not authorized to delete that resource', Response::HTTP_UNAUTHORIZED);
         }
     }
 }

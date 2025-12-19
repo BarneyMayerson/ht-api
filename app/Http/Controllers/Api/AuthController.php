@@ -7,6 +7,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\LoginUserRequest;
 use App\Models\User;
+use App\Permissions\Api\v1\Abilities;
 use App\Traits\ApiResponses;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -32,7 +33,7 @@ class AuthController extends Controller
         return $this->responseOk('Authenticated', [
             'token' => $user->createToken(
                 name: 'API token for '.$user->name,
-                abilities: ['*'],
+                abilities: Abilities::getAbilities($user),
                 expiresAt: now()->addMonth()
             )->plainTextToken,
         ]);
