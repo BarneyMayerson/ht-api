@@ -9,7 +9,6 @@ use App\Http\Requests\Api\v1\StoreTicketRequest;
 use App\Http\Requests\Api\v1\UpdateTicketRequest;
 use App\Http\Resources\v1\TicketResource;
 use App\Models\Ticket;
-use App\Models\User;
 use App\Policies\Api\v1\TicketPolicy;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -40,8 +39,6 @@ class TicketController extends ApiController
     public function store(StoreTicketRequest $request): JsonResponse|TicketResource
     {
         try {
-            User::findOrFail($request->input('data.relationships.author.data.id'));
-
             $this->authorize('store', Ticket::class);
 
             return TicketResource::make(Ticket::create($request->mappedAttributes()));
@@ -50,7 +47,7 @@ class TicketController extends ApiController
                 'error' => 'The provided user id does not exists.',
             ]);
         } catch (AuthorizationException) {
-            return $this->error('You are not authorized to store that resource', Response::HTTP_UNAUTHORIZED);
+            return $this->error('You are not authorized to create that resource', Response::HTTP_UNAUTHORIZED);
         }
 
     }

@@ -16,6 +16,8 @@ final class Abilities
 
     public const DeleteTicket = 'ticket:delete';
 
+    public const CreateOwnTicket = 'ticket:own:create';
+
     public const UpdateOwnTicket = 'ticket:own:update';
 
     public const DeleteOwnTicket = 'ticket:own:delete';
@@ -45,7 +47,7 @@ final class Abilities
                 self::DeleteUser,
             ];
         } else {
-            return [self::CreateTicket, self::UpdateOwnTicket, self::DeleteOwnTicket];
+            return [self::CreateOwnTicket, self::UpdateOwnTicket, self::DeleteOwnTicket];
         }
     }
 }

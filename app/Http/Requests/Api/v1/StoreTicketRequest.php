@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Requests\Api\v1;
 
 use App\Models\Status;
+use App\Permissions\Api\v1\Abilities;
 
 class StoreTicketRequest extends BaseTicketRequest
 {
@@ -27,10 +28,15 @@ class StoreTicketRequest extends BaseTicketRequest
             'data.attributes.title' => 'required|string',
             'data.attributes.description' => 'required|string',
             'data.attributes.status' => 'required|string|in:'.Status::valuesToString(),
+            'data.relationships.author.data.id' => 'required|integer|exists:users,id',
         ];
 
-        if ($this->routeIs('tickets.store')) {
-            $rules['data.relationships.author.data.id'] = 'required|integer';
+        $user = $this->user();
+
+        if ($this->routeIs('v1.tickets.store')) {
+            if ($user->tokenCan(Abilities::CreateOwnTicket)) {
+                $rules['data.relationships.author.data.id'] .= '|size:'.$user->id;
+            }
         }
 
         return $rules;
