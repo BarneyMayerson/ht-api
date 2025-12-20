@@ -9,12 +9,16 @@ use App\Http\Requests\Api\v1\StoreTicketRequest;
 use App\Http\Requests\Api\v1\UpdateTicketRequest;
 use App\Http\Resources\v1\TicketResource;
 use App\Models\Ticket;
+use App\Policies\Api\v1\TicketPolicy;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 
 class AuthorTicketsController extends ApiController
 {
+    protected string $policyClass = TicketPolicy::class;
+
     /**
      * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection<int, TicketResource>
      */
@@ -30,11 +34,17 @@ class AuthorTicketsController extends ApiController
     /**
      * Store a newly created resource in storage.
      */
-    public function store(int $authorId, StoreTicketRequest $request): TicketResource
+    public function store(StoreTicketRequest $request, int $authorId): TicketResource
     {
-        return TicketResource::make(Ticket::create(
-            $request->mappedAttributes(['user_id' => $authorId])
-        ));
+        try {
+            $this->authorize('store', Ticket::class);
+
+            return TicketResource::make(Ticket::create(
+                $request->mappedAttributes(['user_id' => $authorId])
+            ));
+        } catch (AuthorizationException) {
+            return $this->error('You are not authorized to create that resource', Response::HTTP_UNAUTHORIZED);
+        }
     }
 
     /**
@@ -73,15 +83,10 @@ class AuthorTicketsController extends ApiController
     public function destroy(int $authorId, int $ticketId): JsonResponse
     {
         try {
-            $ticket = Ticket::findOrFail($ticketId);
+            $ticket = Ticket::query()->where('user_id', $authorId)->findOrFail($ticketId);
+            $ticket->delete();
 
-            if ($ticket->user_id == $authorId) {
-                $ticket->delete();
-
-                return $this->responseOk('Ticket has been deleted.');
-            }
-
-            return $this->error('Ticket not found', Response::HTTP_NOT_FOUND);
+            return $this->responseOk('Ticket has been deleted.');
         } catch (ModelNotFoundException) {
             return $this->error('Ticket not found', Response::HTTP_NOT_FOUND);
         }
