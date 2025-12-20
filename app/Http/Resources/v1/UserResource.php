@@ -26,6 +26,7 @@ class UserResource extends JsonResource
             'attributes' => [
                 'name' => $user->name,
                 'email' => $user->email,
+                'isManager' => $user->is_manager,
                 $this->mergeWhen($request->routeIs('v1.authors.*'), [
                     'emailVerifiedAt' => $user->email_verified_at,
                     'emailCreatedAt' => $user->created_at,

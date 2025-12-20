@@ -49,7 +49,6 @@ class TicketController extends ApiController
         } catch (AuthorizationException) {
             return $this->error('You are not authorized to create that resource', Response::HTTP_UNAUTHORIZED);
         }
-
     }
 
     /**
