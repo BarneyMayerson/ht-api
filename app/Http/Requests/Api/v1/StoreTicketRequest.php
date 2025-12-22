@@ -34,12 +34,14 @@ class StoreTicketRequest extends BaseTicketRequest
             return $rules;
         }
 
-        $rules['data.relationships.author.data.id'] = 'required|integer|exists:users,id';
+        if ($user = $this->user()) {
+            $authorRule = 'required|integer|exists:users,id';
 
-        $user = $this->user();
+            $rules['data.relationships.author.data.id'] = $authorRule.'|size:'.$user->id;
 
-        if ($user->tokenCan(Abilities::CreateOwnTicket)) {
-            $rules['data.relationships.author.data.id'] .= '|size:'.$user->id;
+            if ($user->tokenCan(Abilities::CreateTicket)) {
+                $rules['data.relationships.author.data.id'] = $authorRule;
+            }
         }
 
         return $rules;

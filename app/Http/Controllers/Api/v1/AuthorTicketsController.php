@@ -34,7 +34,7 @@ class AuthorTicketsController extends ApiController
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreTicketRequest $request, int $authorId): TicketResource
+    public function store(StoreTicketRequest $request, int $authorId): JsonResponse|TicketResource
     {
         try {
             $this->authorize('store', Ticket::class);
