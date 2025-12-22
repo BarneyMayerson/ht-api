@@ -28,7 +28,7 @@ class BaseUserRequest extends FormRequest
                 $value = $this->input($key);
 
                 $attributesToUpdate[$attribute] = $attribute === 'password'
-                    ? bcrypt($value)
+                    ? bcrypt($value) // @phpstan-ignore-line
                     : $value;
             }
         }

@@ -10,10 +10,7 @@ use App\Http\Requests\Api\v1\UpdateUserRequest;
 use App\Http\Resources\v1\UserResource;
 use App\Models\User;
 use App\Policies\Api\v1\UserPolicy;
-use Illuminate\Auth\Access\AuthorizationException;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Response;
 
 class UserController extends ApiController
 {
@@ -36,90 +33,55 @@ class UserController extends ApiController
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreUserRequest $request)
+    public function store(StoreUserRequest $request): JsonResponse|UserResource
     {
-        try {
-            $this->authorize('store', User::class);
+        $this->authorize('store', User::class);
 
-            return UserResource::make(User::create($request->mappedAttributes()));
-        } catch (AuthorizationException) {
-            return $this->error(
-                'You are not authorized to create that resource',
-                Response::HTTP_FORBIDDEN,
-            );
-        }
+        return UserResource::make(User::create($request->mappedAttributes()));
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(int $userId): JsonResponse|UserResource
+    public function show(User $user): JsonResponse|UserResource
     {
-        try {
-            $user = User::findOrFail($userId);
-
-            if ($this->include('tickets')) {
-                return new UserResource($user->load('tickets'));
-            }
-
-            return UserResource::make($user);
-        } catch (ModelNotFoundException) {
-            return $this->error('User not found', Response::HTTP_NOT_FOUND);
+        if ($this->include('tickets')) {
+            return new UserResource($user->load('tickets'));
         }
+
+        return UserResource::make($user);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateUserRequest $request, int $ticketId): JsonResponse|UserResource
+    public function update(UpdateUserRequest $request, User $user): JsonResponse|UserResource
     {
-        try {
-            $user = User::findOrFail($ticketId);
+        $this->authorize('update', $user);
+        $user->update($request->mappedAttributes());
 
-            $this->authorize('update', $user);
-            $user->update($request->mappedAttributes());
-
-            return UserResource::make($user);
-        } catch (ModelNotFoundException) {
-            return $this->error('User not found', Response::HTTP_NOT_FOUND);
-        } catch (AuthorizationException) {
-            return $this->error('You are not authorized to update that resource', Response::HTTP_UNAUTHORIZED);
-        }
+        return UserResource::make($user);
     }
 
     /**
      * Replace the specified resource in storage. (PUT request method)
      */
-    public function replace(ReplaceUserRequest $request, $user_id): JsonResponse|UserResource
+    public function replace(ReplaceUserRequest $request, User $user): JsonResponse|UserResource
     {
-        try {
-            $user = User::query()->findOrFail($user_id);
+        $this->authorize('replace', $user);
+        $user->update($request->mappedAttributes());
 
-            $this->authorize('replace', $user);
-            $user->update($request->mappedAttributes());
-
-            return new UserResource($user);
-        } catch (ModelNotFoundException) {
-            return $this->error('User cannot be found', Response::HTTP_NOT_FOUND);
-        }
+        return new UserResource($user);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(int $userId): JsonResponse
+    public function destroy(User $user): JsonResponse
     {
-        try {
-            $user = User::findOrFail($userId);
+        $this->authorize('delete', $user);
+        $user->delete();
 
-            $this->authorize('delete', $user);
-            $user->delete();
-
-            return $this->responseOk('User has been deleted.');
-        } catch (ModelNotFoundException) {
-            return $this->error('User not found', Response::HTTP_NOT_FOUND);
-        } catch (AuthorizationException) {
-            return $this->error('You are not authorized to delete that resource', Response::HTTP_UNAUTHORIZED);
-        }
+        return $this->responseOk('User has been deleted.');
     }
 }
