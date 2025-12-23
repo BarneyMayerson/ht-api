@@ -4,6 +4,6 @@ use App\Http\Controllers\Api\v2\TicketController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::apiResource('tickets', TicketController::class);
+Route::apiResource('tickets', TicketController::class)->only(['index']);
 
 Route::get('/user', fn (Request $request) => $request->user())->middleware('auth:sanctum');

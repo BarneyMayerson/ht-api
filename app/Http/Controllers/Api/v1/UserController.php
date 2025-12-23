@@ -17,7 +17,9 @@ class UserController extends ApiController
     protected string $policyClass = UserPolicy::class;
 
     /**
-     * Display a listing of the resource.
+     * Get paginated users.
+     *
+     * @group Managing Users
      *
      * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection<int, UserResource>
      */
@@ -26,12 +28,18 @@ class UserController extends ApiController
         return UserResource::collection(
             User::query()
                 ->withRequest()
-                ->get()
+                ->paginate()
         );
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Create a user
+     *
+     * Creates a new user record.
+     *
+     * @group Managing Users
+     *
+     * @response 200
      */
     public function store(StoreUserRequest $request): JsonResponse|UserResource
     {
@@ -41,7 +49,15 @@ class UserController extends ApiController
     }
 
     /**
-     * Display the specified resource.
+     * Show a specific user.
+     *
+     * Display the individual user.
+     *
+     * @group Managing Users
+     *
+     * @queryParam include string Relationship(s) to including. Separate multiple relationships with commas. Not existing relationship will be ignored. Example: tickets
+     *
+     * @response 200
      */
     public function show(User $user): JsonResponse|UserResource
     {
@@ -53,7 +69,13 @@ class UserController extends ApiController
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update a specific user.
+     *
+     * Updates various filds of the user.
+     *
+     * @group Managing Users
+     *
+     * @response 200
      */
     public function update(UpdateUserRequest $request, User $user): JsonResponse|UserResource
     {
@@ -64,7 +86,13 @@ class UserController extends ApiController
     }
 
     /**
-     * Replace the specified resource in storage. (PUT request method)
+     * Replace a specific user.
+     *
+     * Updates all fields of the user.
+     *
+     * @group Managing Users
+     *
+     * @response 200
      */
     public function replace(ReplaceUserRequest $request, User $user): JsonResponse|UserResource
     {
@@ -75,7 +103,13 @@ class UserController extends ApiController
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Delete a specific user.
+     *
+     * Deletes the user with related tickets.
+     *
+     * @group Managing Users
+     *
+     * @response 200
      */
     public function destroy(User $user): JsonResponse
     {

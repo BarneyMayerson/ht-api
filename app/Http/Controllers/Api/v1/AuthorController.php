@@ -6,12 +6,15 @@ namespace App\Http\Controllers\Api\v1;
 
 use App\Http\Resources\v1\UserResource;
 use App\Models\User;
-use Illuminate\Http\Request;
 
 class AuthorController extends ApiController
 {
     /**
-     * Display a listing of the resource.
+     * Get paginated authors.
+     *
+     * Displays authors. This means that users who have created at least one ticket.
+     *
+     * @group Managing Authors
      *
      * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection<int, UserResource>
      */
@@ -31,15 +34,11 @@ class AuthorController extends ApiController
     }
 
     /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request): void
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
+     * Show a specific author.
+     *
+     * @queryParam include string Relationship(s) to including. Separate multiple relationships with commas. Not existing relationship will be ignored. Example: tickets
+     *
+     * @group Managing Authors
      */
     public function show(User $author): UserResource
     {
@@ -48,21 +47,5 @@ class AuthorController extends ApiController
         }
 
         return UserResource::make($author);
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, User $user): void
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(User $user): void
-    {
-        //
     }
 }

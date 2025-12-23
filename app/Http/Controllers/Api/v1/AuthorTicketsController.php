@@ -20,19 +20,11 @@ class AuthorTicketsController extends ApiController
     protected string $policyClass = TicketPolicy::class;
 
     /**
-     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection<int, TicketResource>
-     */
-    public function index(int $authorId)
-    {
-        return TicketResource::collection(
-            Ticket::where('user_id', $authorId)
-                ->withRequest()
-                ->get()
-        );
-    }
-
-    /**
-     * Store a newly created resource in storage.
+     * Create a ticket of author.
+     *
+     * @group Managing Author-Tickets
+     *
+     * @response 200
      */
     public function store(StoreTicketRequest $request, int $authorId): JsonResponse|TicketResource
     {
@@ -48,7 +40,13 @@ class AuthorTicketsController extends ApiController
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update a specific ticket of author.
+     *
+     * Updates any fields of the ticket.
+     *
+     * @group Managing Author-Tickets
+     *
+     * @response 200
      */
     public function update(int $authorId, int $ticketId, UpdateTicketRequest $request): JsonResponse|TicketResource
     {
@@ -63,7 +61,13 @@ class AuthorTicketsController extends ApiController
     }
 
     /**
-     * Replace the specified resource in storage.
+     * Replace a specific ticket of author.
+     *
+     * Updates all fields of the ticket.
+     *
+     * @group Managing Author-Tickets
+     *
+     * @response 200
      */
     public function replace(int $authorId, int $ticketId, ReplaceTicketRequest $request): JsonResponse|TicketResource
     {
@@ -78,7 +82,11 @@ class AuthorTicketsController extends ApiController
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Delete a specific ticket of author.
+     *
+     * @group Managing Author-Tickets
+     *
+     * @response 200
      */
     public function destroy(int $authorId, int $ticketId): JsonResponse
     {

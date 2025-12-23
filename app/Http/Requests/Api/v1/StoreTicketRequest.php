@@ -25,6 +25,8 @@ class StoreTicketRequest extends BaseTicketRequest
     public function rules(): array
     {
         $rules = [
+            'data' => 'required|array',
+            'data.attributes' => 'required|array',
             'data.attributes.title' => 'required|string',
             'data.attributes.description' => 'required|string',
             'data.attributes.status' => 'required|string|in:'.Status::valuesToString(),
