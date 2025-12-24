@@ -12,15 +12,16 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Post extends Model
 {
+    /** @use HasFactory<\Database\Factories\PostFactory> */
     use HasFactory;
 
     /**
-     * @var string[]
+     * @var list<string>
      */
     protected $fillable = ['content', 'published_at', 'slug', 'title'];
 
     /**
-     * @var array
+     * @var array<string, string>
      */
     protected $casts = [
         'published_at' => 'datetime',
