@@ -17,6 +17,14 @@ return Application::configure(basePath: dirname(__DIR__))
         //
     })
     ->withExceptions(function (Exceptions $exceptions): void {
+        $exceptions->dontReport(
+            \LaravelJsonApi\Core\Exceptions\JsonApiException::class,
+        );
+
+        $exceptions->render(
+            \LaravelJsonApi\Exceptions\ExceptionParser::renderer(),
+        );
+
         $exceptions->render(function (Throwable $e, Request $request) {
             $className = $e::class;
             $handlers = ApiExceptions::$handlers;
@@ -34,6 +42,5 @@ return Application::configure(basePath: dirname(__DIR__))
                     'message' => $e->getMessage(),
                 ],
             ]);
-
         });
     })->create();
