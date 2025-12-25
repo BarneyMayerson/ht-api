@@ -24,12 +24,12 @@ class Server extends BaseServer
     /**
      * Get the server's list of schemas.
      *
-     * @return array<mixed>
+     * @return list<string>
      */
     protected function allSchemas(): array
     {
         return [
-            // @TODO
+            Posts\PostSchema::class,
         ];
     }
 }
