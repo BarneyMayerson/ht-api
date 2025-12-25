@@ -17,6 +17,7 @@ class PostRequest extends ResourceRequest
      */
     public function rules(): array
     {
+        /** @var \App\Models\Post|null $post */
         $post = $this->model();
         $uniqueSlug = Rule::unique('posts', 'slug');
 

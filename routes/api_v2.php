@@ -15,6 +15,6 @@ JsonApiRoute::server('v2')->resources(function (ResourceRegistrar $server): void
         ->relationships(function (Relationships $relations): void {
             $relations->hasOne('author')->readOnly();
             $relations->hasMany('comments')->readOnly();
-            $relations->hasMany('tags')->readOnly();
+            $relations->hasMany('tags');
         });
 });

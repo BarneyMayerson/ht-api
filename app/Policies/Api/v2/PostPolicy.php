@@ -70,6 +70,30 @@ class PostPolicy
     }
 
     /**
+     * Determine whether the user can update the model's tags relationship.
+     */
+    public function updateTags(User $user, Post $post): bool
+    {
+        return $this->update($user, $post);
+    }
+
+    /**
+     * Determine whether the user can attach the model's tags relationship.
+     */
+    public function attachTags(User $user, Post $post): bool
+    {
+        return $this->update($user, $post);
+    }
+
+    /**
+     * Determine whether the user can detach the model's tags relationship.
+     */
+    public function detachTags(User $user, Post $post): bool
+    {
+        return $this->update($user, $post);
+    }
+
+    /**
      * Determine whether the user can delete the model.
      */
     public function delete(User $user, Post $post): bool
