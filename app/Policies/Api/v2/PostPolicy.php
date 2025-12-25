@@ -66,7 +66,7 @@ class PostPolicy
      */
     public function update(User $user, Post $post): bool
     {
-        return false;
+        return $user->is($post->author);
     }
 
     /**

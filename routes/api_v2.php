@@ -11,7 +11,7 @@ Route::get('/user', fn (Request $request) => $request->user())->middleware('auth
 
 JsonApiRoute::server('v2')->resources(function (ResourceRegistrar $server): void {
     $server->resource('posts', JsonApiController::class)
-        ->only('index', 'show', 'store')
+        ->only('index', 'show', 'store', 'update')
         ->relationships(function (Relationships $relations): void {
             $relations->hasOne('author')->readOnly();
             $relations->hasMany('comments')->readOnly();
