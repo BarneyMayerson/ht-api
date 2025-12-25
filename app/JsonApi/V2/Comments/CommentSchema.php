@@ -23,6 +23,8 @@ class CommentSchema extends Schema
 
     /**
      * Get the resource fields.
+     *
+     * @return list<mixed>
      */
     public function fields(): array
     {
@@ -37,6 +39,8 @@ class CommentSchema extends Schema
 
     /**
      * Get the resource filters.
+     *
+     * @return list<mixed>
      */
     public function filters(): array
     {
