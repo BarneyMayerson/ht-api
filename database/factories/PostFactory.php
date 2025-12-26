@@ -29,6 +29,7 @@ class PostFactory extends Factory
             'content' => Collection::times(4, fn () => fake()->realText(600))->join(
                 PHP_EOL.PHP_EOL
             ),
+            'published_at' => fake()->boolean(75) ? fake()->dateTime : null,
         ];
     }
 }
